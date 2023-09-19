@@ -32,10 +32,7 @@ const register = async (req, res) => {
 
     const userExists = await UserModel.findOne({ email: email });
 
-    if (userExists)
-      return res
-        .status(400)
-        .send({ user: null, code: "USER_ALREADY_REGISTERED" });
+    if (userExists) return res.status(400).send({ user: null, code: "USER_ALREADY_REGISTERED" });
 
     const user = await UserModel.create({
       firstName,
@@ -67,16 +64,13 @@ const login = async (req, res) => {
   let { password, email } = req.body;
   email = (email || "").trim().toLowerCase();
 
-  if (!email || !password)
-    return res.status(400).send({ code: "EMAIL_AND_PASSWORD_REQUIRED" });
+  if (!email || !password) return res.status(400).send({ code: "EMAIL_AND_PASSWORD_REQUIRED" });
 
   try {
     const user = await UserModel.findOne({ email: email });
     if (!user) return res.status(401).send({ code: "USER_NOT_EXISTS" });
 
-    const match =
-      config.ENVIRONMENT === "development" ||
-      (await user.comparePassword(password));
+    const match = config.ENVIRONMENT === "development" || (await user.comparePassword(password));
     if (!match) return res.status(401).send({ code: "PASSWORDS_NOT_MATCH" });
 
     user.set({ lastLoginAt: Date.now() });

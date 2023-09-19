@@ -28,7 +28,7 @@ module.exports = function (app) {
         console.log(error);
       }
       return done(null, false);
-    })
+    }),
   );
 
   passport.use(
@@ -41,7 +41,7 @@ module.exports = function (app) {
         capture(error);
       }
       return done(null, false);
-    })
+    }),
   );
 
   app.use(passport.initialize());
