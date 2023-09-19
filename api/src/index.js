@@ -4,8 +4,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv").config({ path: "./src/config/.env" });
 const { errorHandler } = require("./middlewares/errorMiddleware");
-const port = process.env.PORT || 5000;
-const { PORT, ENVIRONMENT } = require("./config/config");
+const { PORT, ENVIRONMENT, APP_URL } = require("./config/config");
 
 const app = express();
 
@@ -14,7 +13,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //middleware to allow access control allow origin
-app.use(cors());
+app.use(cors({ origin: [APP_URL], credentials: true }));
 
 require("./config/db");
 require("./middlewares/passport")(app);
@@ -25,6 +24,6 @@ app.use("/user", require("./routes/userRoute"));
 //to see the error messages
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });

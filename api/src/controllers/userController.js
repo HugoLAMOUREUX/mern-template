@@ -14,7 +14,7 @@ const getUsers = async (req, res, next) => {
     res.status(200).send({ data: { users } });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ ok: false, code: ERROR_CODES.SERVER_ERROR });
+    return res.status(500).send({ code: "SERVER_ERROR" });
   }
 };
 
@@ -105,4 +105,16 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout, getUsers };
+const login_token = async (req, res) => {
+  try {
+    const { user } = req;
+    user.set({ lastLoginAt: Date.now() });
+    await user.save();
+    return res.status(200).send({ user, token: req.cookies.jwt });
+  } catch (error) {
+    capture(error);
+    return res.status(500).send({ code: "SERVER_ERROR" });
+  }
+};
+
+module.exports = { register, login, logout, getUsers, login_token };
