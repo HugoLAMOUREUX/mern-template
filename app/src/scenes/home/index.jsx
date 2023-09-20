@@ -8,7 +8,7 @@ const Home = () => {
       <p>Start creating your new app !</p>
       <button
         onClick={async () => {
-          const res = await api.get("/user/login_token");
+          const res = await api.post("/user/login_token");
         }}>
         test
       </button>

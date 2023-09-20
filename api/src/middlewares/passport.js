@@ -7,7 +7,7 @@ const { SECRET } = require("../config/config");
 const User = require("../models/userModel");
 
 function getToken(req) {
-  let token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+  let token = ExtractJwt.fromAuthHeaderWithScheme("JWT")(req);
   if (!token) token = req.cookies.jwt;
   return token;
 }
@@ -21,10 +21,8 @@ module.exports = function (app) {
     "user",
     new JwtStrategy(opts, async function (jwtPayload, done) {
       try {
-        console.log("OUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
-        const user = await User.findOne({ _id: jwtPayload._id.toString() });
+        const user = await User.findOne({ _id: jwtPayload._id });
         if (user) return done(null, user);
-        else return done(null, false);
       } catch (error) {
         console.log(error);
       }
@@ -39,7 +37,7 @@ module.exports = function (app) {
         const user = await User.findOne({ _id: jwtPayload._id.toString() });
         if (user && user.role === "admin") return done(null, user);
       } catch (error) {
-        capture(error);
+        console.log(error);
       }
       return done(null, false);
     }),

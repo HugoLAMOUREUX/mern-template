@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
 const COOKIE_MAX_AGE = 86_400_000;
-const JWT_MAX_AGE = "1d";
+const JWT_MAX_AGE = "5d";
 
 const getUsers = async (req, res, next) => {
   try {
@@ -47,7 +47,7 @@ const register = async (req, res) => {
 
     const cookieOptions = {
       maxAge: COOKIE_MAX_AGE,
-      secure: config.ENVIRONMENT === "development" ? false : true,
+      secure: config.ENVIRONMENT !== "development",
       httpOnly: true,
       sameSite: config.ENVIRONMENT === "development" ? "Lax" : "Strict",
     };
@@ -112,7 +112,7 @@ const login_token = async (req, res) => {
     await user.save();
     return res.status(200).send({ user, token: req.cookies.jwt });
   } catch (error) {
-    capture(error);
+    console.log(error);
     return res.status(500).send({ code: "SERVER_ERROR" });
   }
 };
