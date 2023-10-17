@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import api from "./services/api";
 import { setUser } from "./redux/auth/authAction";
-import Cookies from "js-cookie";
 import Auth from "./scenes/auth";
 import Loader from "./components/Loader";
 import Home from "./scenes/home";
